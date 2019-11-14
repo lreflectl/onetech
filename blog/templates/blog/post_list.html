@@ -10,8 +10,10 @@
 	        </div>
 	        <a href="{% url 'post_detail' pk=post.pk %}">
 	        	Comments: {{ post.approved_comments.count }} 
-	        	{% if user.is_authenticated and unapproved_comments != 0 %}
-	        		</br>Comments to be approved: {{ post.unapproved_comments.count }} 
+	        	{% if user.is_authenticated %}
+	        		{% if post.unapproved_comments.count >= 1 %}
+	        			</br>Comments to be approved: {{ post.unapproved_comments.count }} 
+	        		{% endif %}
 	        	{% endif %}
 	        </a>
 	    </div>
