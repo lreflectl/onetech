@@ -8,6 +8,12 @@
 	        <div class="date">
 	            <p>Опубликовано: {{ post.published_date }}</p>
 	        </div>
+	        <a href="{% url 'post_detail' pk=post.pk %}">
+	        	Comments: {{ post.approved_comments.count }} 
+	        	{% if user.is_authenticated and unapproved_comments != 0 %}
+	        		</br>Comments to be approved: {{ post.unapproved_comments.count }} 
+	        	{% endif %}
+	        </a>
 	    </div>
 	{% endfor %}
 {% endblock %}
