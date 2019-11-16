@@ -2,25 +2,31 @@
 {% load static %}
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Blog</title>
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 		<link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="{% static 'css/blog.css' %}">
-		<link rel="stylesheet" href="{% static 'css/media.css' %}">
 	</head>
 
 	<body>
 	    <header>
-	    	<h1><a href="/", class="top-menu-blog-name">Django Blog</a></h1>
-	    	<div class="top">
+	    	<a href="/", class="top-menu-blog-name">Django Blog</a>
 	    	{% if user.is_authenticated %}
-	    		<div class="top-menu">{{ user.username }}</div>
-	    		<a href="{% url 'logout' %}" class="top-menu">logout</a>
-	    		<a href="{% url 'post_new' %}" class="top-menu-button"><span class="glyphicon glyphicon-plus"></span></a>
-	    		<a href="{% url 'post_draft_list' %}" class="top-menu-button"><span class="glyphicon glyphicon-edit"></span></a>
+	    		<div class="top-menu">
+	    			{{ user.username }}(<a href="{% url 'logout' %}">logout</a>)
+	    		</div>
+	    		<div class="top-menu-button">
+	    			<a href="{% url 'post_new' %}"><span class="glyphicon glyphicon-plus"></span></a>
+	    		</div>
+	    		<div class="top-menu-button">
+	    			<a href="{% url 'post_draft_list' %}"><span class="glyphicon glyphicon-edit"></span></a>
+	    		</div>
 	    	{% else %}
-	    		<a href="{% url 'login' %}" class="top-menu-button"><span class="glyphicon glyphicon-lock"></span></a>
+	    		<div class="top-menu-button">
+	    			<a href="{% url 'login' %}"><span class="glyphicon glyphicon-lock"></span></a>
+	    		</div>
 	    	{% endif %}
 	    	</div>
 	    </header>
