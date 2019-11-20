@@ -3,16 +3,27 @@ from django.utils import timezone
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 def post_list(request):
-	posts = Post.objects.filter(published_date__isnull=False).order_by('-published_date')
-	return render(request, 'blog/post_list.html', {'posts': posts})
+	post_list = Post.objects.filter(published_date__isnull=False).order_by('-published_date')
+	paginator = Paginator(post_list, 5)
+
+	page = request.GET.get('page')
+	posts_on_page = paginator.get_page(page)
+	return render(request, 'blog/post_list.html', {'posts': posts_on_page})
 
 
 def post_detail(request, pk):
 	post = get_object_or_404(Post, pk=pk)
-	return render(request, 'blog/post_detail.html', {'post': post})
+	comments = post.approved_comments().order_by('-created_date')
+	un_comments = post.unapproved_comments().order_by('-created_date')
+	paginator = Paginator(comments, 10)
+
+	page = request.GET.get('comment_page')
+	comments_on_page = paginator.get_page(page)
+	return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments_on_page, 'un_comments': un_comments})
 
 
 def add_comment_to_post(request, pk):
@@ -60,8 +71,12 @@ def post_edit(request, pk):
 
 @login_required
 def post_draft_list(request):
-	posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
-	return render(request, 'blog/post_draft_list.html', {'posts': posts})
+	post_list = Post.objects.filter(published_date__isnull=True).order_by('-created_date')
+	paginator = Paginator(post_list, 5)
+
+	page = request.GET.get('page')
+	posts_on_page = paginator.get_page(page)
+	return render(request, 'blog/post_draft_list.html', {'posts': posts_on_page})
 
 @login_required
 def post_publish(request, pk):
